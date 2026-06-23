@@ -9,8 +9,8 @@ type Props = {
 
 export default function PiAuthGate({ onAuthenticated }: Props) {
   const startedRef = useRef(false);
-  const [status, setStatus] = useState('Opening Pi Network authorization...');
-  const [detail, setDetail] = useState('Please approve username + payments permission to continue.');
+  const [status, setStatus] = useState('Preparing Pi authorization...');
+  const [detail, setDetail] = useState('LinkRoutine will open the Pi Allow window automatically.');
   const [failed, setFailed] = useState(false);
 
   const startAuth = useCallback(async () => {
@@ -27,7 +27,7 @@ export default function PiAuthGate({ onAuthenticated }: Props) {
       const message = error instanceof Error ? error.message : 'Pi connection failed.';
       setFailed(true);
       setStatus(message);
-      setDetail('Open LinkRoutine from Pi Browser → develop.pi Sandbox URL. Vercel env must use NEXT_PUBLIC_ENABLE_MOCK_PI=false.');
+      setDetail('If the Allow window does not open, use Pi Browser → develop.pi → LinkRoutine Sandbox URL, then press Retry.');
       console.error('LinkRoutine Pi auto-auth error:', error, window.__LINKROUTINE_PI_DEBUG__);
     }
   }, [onAuthenticated]);
@@ -35,7 +35,13 @@ export default function PiAuthGate({ onAuthenticated }: Props) {
   useEffect(() => {
     if (startedRef.current) return;
     startedRef.current = true;
-    startAuth();
+
+    // Give Pi Browser and the SDK script a moment to finish mounting before auto-auth.
+    const timer = window.setTimeout(() => {
+      startAuth();
+    }, 650);
+
+    return () => window.clearTimeout(timer);
   }, [startAuth]);
 
   return (
@@ -44,7 +50,7 @@ export default function PiAuthGate({ onAuthenticated }: Props) {
         <p className="eyebrow">PIONEER ACCOUNT</p>
         <strong>{status}</strong>
         <p className="microCopy">{detail}</p>
-        <p className="microCopy">LinkRoutine starts with Pi authorization before opening the app dashboard.</p>
+        <p className="microCopy">The app dashboard opens only after Pi username + payments authorization is completed.</p>
       </div>
       {failed ? (
         <button className="primaryButton" onClick={startAuth}>Retry Pi Auth</button>
