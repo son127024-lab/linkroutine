@@ -7,6 +7,7 @@ import LinkIconGrid from './LinkIconGrid';
 import SettingsPanel from './SettingsPanel';
 import SmartViewer from './SmartViewer';
 import SubscriptionPanel from './SubscriptionPanel';
+import ExternalConnectionNotice from './ExternalConnectionNotice';
 import { CATEGORIES, LinkCategory } from '@/lib/categories';
 import { addLink, deleteLinks, loadLinks, saveLinks, updateLinkOpen } from '@/lib/storage';
 import { loadSubscriptionRecord, recordQualifiedVisit, SubscriptionRecord } from '@/lib/subscription';
@@ -113,6 +114,8 @@ export default function AppShell() {
             {subscriptionRecord ? (
               <SubscriptionPanel record={subscriptionRecord} onRecordChange={setSubscriptionRecord} />
             ) : null}
+
+            <ExternalConnectionNotice />
 
             <UrlMailbox onSave={handleCreateLink} />
 

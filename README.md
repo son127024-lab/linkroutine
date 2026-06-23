@@ -121,3 +121,16 @@ If the Pi Network Authentication window or Wallet payment window does not appear
    - `/api/payments/complete`
 
 If the Wallet still does not open, redeploy Vercel after changing environment variables.
+
+
+## V1.5 External Site Notice
+
+This build adds a visible notice to the main dashboard and blocked-site viewer:
+
+> Some external websites may not open inside LinkRoutine due to current Pi Browser and website security limits. External site connection features may be expanded after the full Open Mainnet environment becomes available.
+
+Korean UI copy:
+
+> 일부 외부 사이트는 현재 Pi Browser 및 각 웹사이트의 보안 정책으로 인해 LinkRoutine 안에서 바로 열리지 않을 수 있습니다. 외부 사이트 연결 기능은 완전 오픈 메인넷 이후 확장될 수 있습니다.
+
+This message helps position LinkRoutine safely as a user-controlled link routine app, not a guaranteed external-site embedding tool.

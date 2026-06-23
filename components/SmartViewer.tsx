@@ -57,7 +57,8 @@ export default function SmartViewer({ link, onClose, onQualifiedVisit }: Props) 
         {iframeFailed ? (
           <div className="blockedCard">
             <h2>This site blocked embedded viewing.</h2>
-            <p>Use Open Original to continue in Pi Browser.</p>
+            <p>Use Open Original to continue in Pi Browser. External site connection features may be expanded after the full Open Mainnet environment becomes available.</p>
+            <p className="koNotice">일부 외부 사이트는 현재 보안 정책으로 인해 앱 안에서 바로 열리지 않을 수 있습니다. 외부 사이트 연결 기능은 완전 오픈 메인넷 이후 확장될 수 있습니다.</p>
             <button className="primaryButton" onClick={openOriginal}>Open Original Site</button>
           </div>
         ) : (

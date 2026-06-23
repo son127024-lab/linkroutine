@@ -113,6 +113,11 @@ h2 { font-size: 19px; }
 .centerText { text-align: center; }
 .subscriptionMessage { margin: 10px 0 0; color: var(--gold-2); font-size: 12px; text-align: center; font-weight: 800; }
 
+.noticeCard { display: grid; grid-template-columns: 42px 1fr; gap: 12px; align-items: start; background: rgba(241,200,106,0.10); border: 1px solid rgba(241,200,106,0.20); border-radius: 20px; padding: 13px; margin-bottom: 14px; }
+.noticeIcon { width: 42px; height: 42px; border-radius: 14px; display: grid; place-items: center; background: rgba(0,0,0,0.24); font-size: 21px; }
+.noticeText { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 4px; }
+.koNotice { color: #f2ddad; }
+
 .authGateCard {
   position: relative;
   min-height: 168px;
