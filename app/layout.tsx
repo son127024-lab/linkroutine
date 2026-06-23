@@ -1,4 +1,5 @@
 import './globals.css';
+import Script from 'next/script';
 import type { Metadata, Viewport } from 'next';
 
 export const metadata: Metadata = {
@@ -16,7 +17,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Script src="https://sdk.minepi.com/pi-sdk.js" strategy="beforeInteractive" />
+        {children}
+      </body>
     </html>
   );
 }

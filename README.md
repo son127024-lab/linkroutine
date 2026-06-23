@@ -101,3 +101,23 @@ Ad revenue test, real ad performance dashboard, country/traffic quality analysis
 
 ### V4.0
 Limited Pi cashback only if real ad revenue proves it is sustainable.
+
+
+## Pi SDK Popup Troubleshooting
+
+If the Pi Network Authentication window or Wallet payment window does not appear:
+
+1. Confirm this script exists in `app/layout.tsx`:
+   `https://sdk.minepi.com/pi-sdk.js`
+2. Confirm Vercel Environment Variables:
+   - `NEXT_PUBLIC_ENABLE_MOCK_PI=false`
+   - `NEXT_PUBLIC_PI_SANDBOX=true`
+   - `PI_API_KEY=<LinkRoutine Developer Portal API Key>`
+3. Open the app through Pi Browser Sandbox / Development URL, not a normal desktop browser.
+4. Confirm Pi Developer Portal Development URL points to the current Vercel Production URL.
+5. In the browser console, check `window.__LINKROUTINE_PI_DEBUG__`.
+6. Payment requires both API routes to be live:
+   - `/api/payments/approve`
+   - `/api/payments/complete`
+
+If the Wallet still does not open, redeploy Vercel after changing environment variables.
