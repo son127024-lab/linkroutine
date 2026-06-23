@@ -1,37 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { authenticatePi, PiUser } from '@/lib/pi';
 
-export default function PiAuthGate() {
-  const [user, setUser] = useState<PiUser | null>(null);
-  const [status, setStatus] = useState('Not connected');
-  const [detail, setDetail] = useState('Real Pi SDK mode opens the Pi authorization window only from Pi Browser Sandbox.');
+type Props = {
+  onAuthenticated: (user: PiUser) => void;
+};
 
-  async function handleConnect() {
-    setStatus('Connecting to Pi...');
+export default function PiAuthGate({ onAuthenticated }: Props) {
+  const startedRef = useRef(false);
+  const [status, setStatus] = useState('Opening Pi Network authorization...');
+  const [detail, setDetail] = useState('Please approve username + payments permission to continue.');
+  const [failed, setFailed] = useState(false);
+
+  const startAuth = useCallback(async () => {
+    setFailed(false);
+    setStatus('Opening Pi Network authorization...');
+    setDetail('Please approve username + payments permission to continue.');
+
     try {
       const piUser = await authenticatePi();
-      setUser(piUser);
-      setStatus('Connected');
-      setDetail(`Connected as @${piUser.username ?? 'pioneer'}. Payments scope requested.`);
+      setStatus(`Connected as @${piUser.username ?? 'pioneer'}`);
+      setDetail('Pi account connected. Subscription payment is now available.');
+      onAuthenticated(piUser);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Pi connection failed.';
+      setFailed(true);
       setStatus(message);
-      setDetail('Check Vercel env: NEXT_PUBLIC_ENABLE_MOCK_PI=false, then open through Pi Browser → develop.pi Sandbox URL.');
-      console.error('LinkRoutine Pi connection error:', error, window.__LINKROUTINE_PI_DEBUG__);
+      setDetail('Open LinkRoutine from Pi Browser → develop.pi Sandbox URL. Vercel env must use NEXT_PUBLIC_ENABLE_MOCK_PI=false.');
+      console.error('LinkRoutine Pi auto-auth error:', error, window.__LINKROUTINE_PI_DEBUG__);
     }
-  }
+  }, [onAuthenticated]);
+
+  useEffect(() => {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    startAuth();
+  }, [startAuth]);
 
   return (
-    <section className="authCard">
+    <section className="authCard authGateCard">
       <div>
         <p className="eyebrow">PIONEER ACCOUNT</p>
-        <strong>{user?.username ? `@${user.username}` : status}</strong>
-        <p className="microCopy">Pi auth uses username + payments scope for test payment readiness.</p>
+        <strong>{status}</strong>
         <p className="microCopy">{detail}</p>
+        <p className="microCopy">LinkRoutine starts with Pi authorization before opening the app dashboard.</p>
       </div>
-      <button className="primaryButton" onClick={handleConnect}>{user ? 'Connected' : 'Connect Pi'}</button>
+      {failed ? (
+        <button className="primaryButton" onClick={startAuth}>Retry Pi Auth</button>
+      ) : (
+        <div className="authSpinner" aria-label="Opening Pi authorization" />
+      )}
     </section>
   );
 }

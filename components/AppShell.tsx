@@ -11,6 +11,7 @@ import { CATEGORIES, LinkCategory } from '@/lib/categories';
 import { addLink, deleteLinks, loadLinks, saveLinks, updateLinkOpen } from '@/lib/storage';
 import { loadSubscriptionRecord, recordQualifiedVisit, SubscriptionRecord } from '@/lib/subscription';
 import { createLinkItem, LinkItem } from '@/lib/urlTools';
+import { PiUser } from '@/lib/pi';
 
 export default function AppShell() {
   const [links, setLinks] = useState<LinkItem[]>([]);
@@ -19,6 +20,7 @@ export default function AppShell() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [subscriptionRecord, setSubscriptionRecord] = useState<SubscriptionRecord | null>(null);
+  const [piUser, setPiUser] = useState<PiUser | null>(null);
 
   useEffect(() => {
     setLinks(loadLinks());
@@ -95,38 +97,52 @@ export default function AppShell() {
           </button>
         </header>
 
-        <PiAuthGate />
-        {subscriptionRecord ? (
-          <SubscriptionPanel record={subscriptionRecord} onRecordChange={setSubscriptionRecord} />
-        ) : null}
+        {!piUser ? (
+          <PiAuthGate onAuthenticated={setPiUser} />
+        ) : (
+          <>
+            <section className="authCard connectedAccountCard">
+              <div>
+                <p className="eyebrow">PIONEER ACCOUNT</p>
+                <strong>@{piUser.username ?? 'pioneer'}</strong>
+                <p className="microCopy">Pi authorization completed with username + payments scope.</p>
+              </div>
+              <span className="statusPill activeStatus">CONNECTED</span>
+            </section>
 
-        <UrlMailbox onSave={handleCreateLink} />
+            {subscriptionRecord ? (
+              <SubscriptionPanel record={subscriptionRecord} onRecordChange={setSubscriptionRecord} />
+            ) : null}
 
-        <nav className="categoryTabs" aria-label="Filter categories">
-          <button className={activeCategory === 'All' ? 'tab activeTab' : 'tab'} onClick={() => setActiveCategory('All')}>
-            All
-          </button>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.key}
-              className={activeCategory === cat.key ? 'tab activeTab' : 'tab'}
-              onClick={() => setActiveCategory(cat.key)}
-            >
-              <span>{cat.icon}</span> {cat.label}
-            </button>
-          ))}
-        </nav>
+            <UrlMailbox onSave={handleCreateLink} />
 
-        <section className="homePanel">
-          <div className="panelTitleRow">
-            <div>
-              <p className="eyebrow">MY LINK HOME</p>
-              <h2>Saved Icons</h2>
-            </div>
-            <button className="ghostButton" onClick={handleResetDemo}>Demo</button>
-          </div>
-          <LinkIconGrid links={filteredLinks} onOpen={handleOpenLink} />
-        </section>
+            <nav className="categoryTabs" aria-label="Filter categories">
+              <button className={activeCategory === 'All' ? 'tab activeTab' : 'tab'} onClick={() => setActiveCategory('All')}>
+                All
+              </button>
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.key}
+                  className={activeCategory === cat.key ? 'tab activeTab' : 'tab'}
+                  onClick={() => setActiveCategory(cat.key)}
+                >
+                  <span>{cat.icon}</span> {cat.label}
+                </button>
+              ))}
+            </nav>
+
+            <section className="homePanel">
+              <div className="panelTitleRow">
+                <div>
+                  <p className="eyebrow">MY LINK HOME</p>
+                  <h2>Saved Icons</h2>
+                </div>
+                <button className="ghostButton" onClick={handleResetDemo}>Demo</button>
+              </div>
+              <LinkIconGrid links={filteredLinks} onOpen={handleOpenLink} />
+            </section>
+          </>
+        )}
 
         {toast ? <div className="toast">{toast}</div> : null}
         {settingsOpen ? <SettingsPanel links={links} onClose={() => setSettingsOpen(false)} onDelete={handleDelete} /> : null}

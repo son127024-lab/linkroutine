@@ -112,3 +112,28 @@ h2 { font-size: 19px; }
 .fullWidthButton { width: 100%; margin-top: 12px; }
 .centerText { text-align: center; }
 .subscriptionMessage { margin: 10px 0 0; color: var(--gold-2); font-size: 12px; text-align: center; font-weight: 800; }
+
+.authGateCard {
+  position: relative;
+  min-height: 168px;
+}
+
+.connectedAccountCard {
+  align-items: center;
+}
+
+.authSpinner {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 4px solid rgba(255, 207, 101, 0.2);
+  border-top-color: #ffd36c;
+  animation: linkroutineSpin 0.85s linear infinite;
+  flex: 0 0 auto;
+}
+
+@keyframes linkroutineSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

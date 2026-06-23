@@ -17,10 +17,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>
+      <head>
         <Script src="https://sdk.minepi.com/pi-sdk.js" strategy="beforeInteractive" />
-        {children}
-      </body>
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
